@@ -19,9 +19,10 @@ def get_parser():
 
 def main(args):
     logging.info('(function {}) Started'.format(main.__name__))
-    # TODO: 1) We need to create a interface to have the same signature for all the formatters in ds_formatter folder.
+    # TODO: 1) We need to create a interface class to have the same signature for all the formatters in ds_formatter folder.
     # TODO: 2) We need to create a generic approach to convert any type to any type not only any type to squad.
     # TODO: 3) can we have better approach to handle the following if/else scenarios
+    # TODO: 4) we may also put some kind of field wrapper to handle whether which fields are gonna be filled with dummy and which fields are gonna be filled with real values.
     if args.source_dataset_format.lower() == 'qangaroo' and args.destination_dataset_format.lower() == 'squad' :
         in_content = UTIL.load_json_file(args.source_file_path, logging)
         out_content = qangaroo.convert_to_squad(in_content)
