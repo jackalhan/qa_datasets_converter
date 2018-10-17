@@ -13,8 +13,6 @@ def convert_to_squad(story_question_content, answer_content):
     data = []
 
     for datum in story_question_content.itertuples(index=False):
-        print(row["0"])
-
         # Format is deeply nested JSON -- prepare data structures
         data_ELEMENT = dict()
         data_ELEMENT['title'] = 'dummyTitle'
@@ -26,7 +24,7 @@ def convert_to_squad(story_question_content, answer_content):
         ANSWERS_ELEMENT = dict()
 
         qas_ELEMENT['id'] = datum[0]
-        qas_ELEMENT['question'] = datum['query']
+        qas_ELEMENT['question'] = datum[1].replace("one: ", "").replace("multiple: ", "")
 
         superdocument = " <new_doc> ".join(datum[2])
 
