@@ -34,6 +34,8 @@ def main(args):
         answer_content = UTIL.load_csv_file(additional_files[0], "\t", None, logging)
         formatted_content = mctest.convert_to_squad(story_question_content, answer_content)
         UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+    elif args.source_dataset_format.lower() == 'insuranceqa' and args.destination_dataset_format.lower() == 'squad' :
+        pass
 
     logging.info('(function {}) Finished'.format(main.__name__))
 if __name__ == '__main__':
