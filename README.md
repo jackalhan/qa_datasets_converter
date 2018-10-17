@@ -1,4 +1,4 @@
-# Dataset Converter for QA Tasks 
+# Dataset Converter for Question-Answering (QA) Tasks 
 Dataset Converter for QA Tasks: from one format to other one
 
 #### QA Dataset Formats:
