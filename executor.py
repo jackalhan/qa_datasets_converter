@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo
+from ds_formatter import qangaroo, mctest
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -12,6 +12,7 @@ def get_parser():
     parser.add_argument('--log_path',help="path to the log file")
     parser.add_argument('--log_info',default="INFO", help="logging level")
     parser.add_argument('--source_file_path', help="path to the source file to be converted")
+    parser.add_argument('--additional_source_files', help="addition/supporting files that are in the same path as source, could be coma-seperated")
     parser.add_argument('--source_dataset_format', help="dataset name of the source format")
     parser.add_argument('--destination_file_path', help="path to the destination file")
     parser.add_argument('--destination_dataset_format', help="dataset name of the destination format")
@@ -25,8 +26,15 @@ def main(args):
     # TODO: 4) we may also put some kind of field wrapper to handle whether which fields are gonna be filled with dummy and which fields are gonna be filled with real values.
     if args.source_dataset_format.lower() == 'qangaroo' and args.destination_dataset_format.lower() == 'squad' :
         in_content = UTIL.load_json_file(args.source_file_path, logging)
-        out_content = qangaroo.convert_to_squad(in_content)
-        UTIL.dump_json_file(args.destination_file_path, out_content, logging)
+        formatted_content = qangaroo.convert_to_squad(in_content)
+        UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+    elif args.source_dataset_format.lower() == 'mctest' and args.destination_dataset_format.lower() == 'squad':
+        additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
+        story_question_content = UTIL.load_csv_file(args.source_file_path,"\t", None, logging)
+        answer_content = UTIL.load_csv_file(additional_files[0], "\t", None, logging)
+        formatted_content = mctest.convert_to_squad(story_question_content, answer_content)
+        UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
     logging.info('(function {}) Finished'.format(main.__name__))
 if __name__ == '__main__':
     args = get_parser().parse_args()

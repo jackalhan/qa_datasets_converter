@@ -7,6 +7,8 @@ Dataset Converter for QA Tasks: from one format to other one
 * [QAngaroo](http://bit.ly/2m0W32k)
      
 #### Supported Formats :
-Source | Destination
+Source | Destination | Status
 ------------ | -------------
-QAngaroo| SQuAD v1
+QAngaroo| SQuAD v1| done
+MCTest| SQuAD v1| ongoing
+WikiQA| SQuAD v1| ongoing
