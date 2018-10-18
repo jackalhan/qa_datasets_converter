@@ -12,11 +12,11 @@ Dataset Converter for QA Tasks: from one format to other one
 #### Supported Formats :
 Source | Destination | Status | Owner
 ------------ | ------------- | ------------- | -------------
-QAngaroo| SQuAD v1| completed| T
-MCTest| SQuAD v1| completed| T
-WikiQA| SQuAD v1| in progress| E
-InsuranceQA v1| SQuAD v1| completed| T
-InsuranceQA v2| SQuAD v1| completed| T
+QAngaroo| SQuAD| completed| T
+MCTest| SQuAD| completed| T
+WikiQA| SQuAD| in progress| E
+InsuranceQA v1| SQuAD| completed| T
+InsuranceQA v2| SQuAD| completed| T
 
 #### Example Call :
 ```
