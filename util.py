@@ -35,15 +35,18 @@ def load_csv_file(file_path, sep, header, logging):
         raise
     return content
 
-def parse_additional_files(file_path, additional_files, logging, seperator=','):
+def parse_additional_files(file_path, additional_files, logging, item_seperator=',', k_v_seperator=':'):
     source_path = file_path.rpartition(os.sep)[0]
-    _additional_files = []
+    _additional_files = dict()
     try:
-        for _ in additional_files.split(seperator):
+        for _ in additional_files.split(item_seperator):
+            _splitted = _.split(k_v_seperator)
+            key = _splitted[0]
+            value = _splitted[1]
             if not os.path.isfile(_):
-                _additional_files.append(os.path.join(source_path, _))
+                _additional_files[key] = os.path.join(source_path, value)
             else:
-                _additional_files.append(_)
+                _additional_files[key] = value
         logging.info(
             '(function {}) is run successfuly'.format(parse_additional_files.__name__, file_path))
     except Exception as e:

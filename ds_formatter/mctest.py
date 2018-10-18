@@ -9,9 +9,9 @@ def convert_to_squad(story_question_content, answer_content):
     # PARSE FILES
 
     squad_formatted_content = dict()
-    squad_formatted_content['version'] = 'hoppy_squad_format'
+    squad_formatted_content['version'] = 'mctest_squad_format'
     data = []
-
+    #TODO: Each context has multiple questions and each row of the file has multiple questions in different columns (like every 4 columns), we need to handle this.
     for datum in story_question_content.itertuples(index=False):
         # Format is deeply nested JSON -- prepare data structures
         data_ELEMENT = dict()
@@ -26,7 +26,7 @@ def convert_to_squad(story_question_content, answer_content):
         qas_ELEMENT['id'] = datum[0]
         qas_ELEMENT['question'] = datum[1].replace("one: ", "").replace("multiple: ", "")
 
-        superdocument = " <new_doc> ".join(datum[2])
+        superdocument = datum[2]
 
         ANSWERS_ELEMENT['answer_start'] = -1
         ANSWERS_ELEMENT['text'] = 'dummyAnswer'

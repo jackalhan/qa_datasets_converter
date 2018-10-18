@@ -1,44 +1,38 @@
-def convert_to_squad(source_data):
+def convert_to_squad(questions, answers, a_to_q_map):
     """
-    Converts QAngaroo data (hoppy_data) into SQuAD format.
-    The SQuAD-formatted data is written to disk at write_file_name.
-    Note: All given support documents per example are concatenated
-        into one super-document. All text is lowercased.
+    questions:questions
+    answers: answers or context or paragraphs
+    a_to_q_map: answers to questions mapping
     """
     squad_formatted_content = dict()
-    squad_formatted_content['version'] = 'hoppy_squad_format'
+    squad_formatted_content['version'] = 'insuranceqa_squad_format'
     data = []
 
 
-    for datum in source_data:
-
+    for par_indx, ques in a_to_q_map.items():
         # Format is deeply nested JSON -- prepare data structures
         data_ELEMENT = dict()
         data_ELEMENT['title'] = 'dummyTitle'
+
         paragraphs = []
         paragraphs_ELEMENT = dict()
-        qas = []
-        qas_ELEMENT = dict()
-        qas_ELEMENT_ANSWERS = []
-        ANSWERS_ELEMENT = dict()
 
-        qas_ELEMENT['id'] = datum['id']
-        qas_ELEMENT['question'] = datum['query']
-
-        superdocument = " <new_doc> ".join(datum['supports'])
-
-        answer_position = superdocument.find(datum['answer'])
-        if answer_position == -1:
-            continue
-
-        ANSWERS_ELEMENT['answer_start'] = answer_position
-        ANSWERS_ELEMENT['text'] = datum['answer']
-
+        superdocument = answers[par_indx]
         paragraphs_ELEMENT['context'] = superdocument
-        qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
 
-        qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
-        qas.append(qas_ELEMENT)
+
+        qas = []
+        for q_indx in ques:
+            qas_ELEMENT = dict()
+            ANSWERS_ELEMENT = dict()
+            qas_ELEMENT_ANSWERS = []
+            qas_ELEMENT['id'] = q_indx
+            qas_ELEMENT['question'] = questions[q_indx]
+            ANSWERS_ELEMENT['answer_start'] = -1
+            ANSWERS_ELEMENT['text'] = 'dummyAnswer'
+            qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
+            qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
+            qas.append(qas_ELEMENT)
 
         paragraphs_ELEMENT['qas'] = qas
         paragraphs.append(paragraphs_ELEMENT)
@@ -49,3 +43,38 @@ def convert_to_squad(source_data):
     squad_formatted_content['data'] = data
 
     return squad_formatted_content
+
+def load_vocab(vocab_file):
+  voc = {}
+  with open(vocab_file, 'r') as f_in:
+      for line in f_in:
+        word, _id = line.strip().split('\t')
+        voc[word] = _id
+  return voc
+
+def load_answers(answers_file, voc):
+  #answers = context
+  _list = ["None"]
+  with open(answers_file, 'r') as f_in:
+      for line in f_in:
+          _, sent = line.strip().split('\t')
+          _list.append(' '.join([voc[wid] for wid in sent.split(' ')]))
+  return _list
+
+
+def load_questions(question_file, voc):
+  questions = []
+  a_to_q_map = dict()
+  with open(question_file, 'r') as f_in:
+      for q_indx, line in enumerate(f_in):
+        q, ids = line.strip().split('\t')
+        q = ' '.join([voc[wid] for wid in q.split(' ')])
+        questions.append(q)
+        for _id in ids.split(' '):
+            if _id not in a_to_q_map:
+                a_to_q_map[int(_id)] = [q_indx]
+            else:
+                temp_qs = a_to_q_map[int(_id)]
+                temp_qs = temp_qs.append(int(_id))
+                a_to_q_map[int(_id)] = temp_qs
+  return questions, a_to_q_map
