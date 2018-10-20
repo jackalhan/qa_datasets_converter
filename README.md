@@ -8,15 +8,29 @@ Dataset Converter for QA Tasks: from one format to other one
 * [MCTest](https://www.microsoft.com/en-us/research/publication/mctest-challenge-dataset-open-domain-machine-comprehension-text/)
 * [WikiQA](https://aclweb.org/anthology/D15-1237)
 * [InsuranceQA v2](https://github.com/shuzi/insuranceQA) & [InsuranceQA v1](https://github.com/shuzi/insuranceQA)
-     
+* [MS_MARCO](http://www.msmarco.org/)
+* [WikiMovies](https://arxiv.org/abs/1606.03126)
+* [Web Questions](https://www.microsoft.com/en-us/download/details.aspx?id=52763)
+* [TriviaQA](https://www.microsoft.com/en-us/download/details.aspx?id=52763)
+* [Simple Questions](https://arxiv.org/abs/1506.02075)
+* [NarrativeQA](https://github.com/deepmind/narrativeqa)
+* [Ubuntu Dialogue Corpus v2.0](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
+
 #### Supported Formats :
 Source | Destination | Status | Owner
 ------------ | ------------- | ------------- | -------------
-QAngaroo| SQuAD| completed| T
-MCTest| SQuAD| completed| T
-WikiQA| SQuAD| in progress| E
-InsuranceQA v1| SQuAD| completed| T
-InsuranceQA v2| SQuAD| completed| T
+QAngaroo| SQuAD| **completed**| T
+MCTest| SQuAD| **completed**| T
+WikiQA| SQuAD| *in progress*| E
+InsuranceQA v1| SQuAD| **completed**| T
+InsuranceQA v2| SQuAD| **completed**| T
+Web Questions| SQuAD| *in progress*| T
+TriviaQA| SQuAD| *in progress*| T
+NarrativeQA| SQuAD| *in progress*| T
+MS MARCO| SQuAD| *in progress*| W
+WikiMovies| SQuAD| *in progress*| W
+Simple Questions| SQuAD| *in progress*| W
+Ubuntu Corpus v2| SQuAD| *in progress*| W
 
 #### Example Call :
 ```
