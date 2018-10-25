@@ -11,7 +11,7 @@ Dataset Converter for QA Tasks: from one format to other one
 * [MS_MARCO](http://www.msmarco.org/)
 * [WikiMovies](https://arxiv.org/abs/1606.03126)
 * [Web Questions](https://www.microsoft.com/en-us/download/details.aspx?id=52763)
-* [TriviaQA](https://www.microsoft.com/en-us/download/details.aspx?id=52763)
+* [TriviaQA](http://nlp.cs.washington.edu/triviaqa/)
 * [Simple Questions](https://arxiv.org/abs/1506.02075)
 * [NarrativeQA](https://github.com/deepmind/narrativeqa)
 * [Ubuntu Dialogue Corpus v2.0](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
@@ -21,11 +21,11 @@ Source | Destination | Status | Owner
 ------------ | ------------- | ------------- | -------------
 QAngaroo| SQuAD| **completed**| T
 MCTest| SQuAD| **completed**| T
-WikiQA| SQuAD| *in progress*| E
+WikiQA| SQuAD| *--on hold--*| T
 InsuranceQA v1| SQuAD| **completed**| T
 InsuranceQA v2| SQuAD| **completed**| T
-Web Questions| SQuAD| *in progress*| T
-TriviaQA| SQuAD| *in progress*| T
+Web Questions| SQuAD| *--on hold--*| T
+TriviaQA| SQuAD| *completed*| T
 NarrativeQA| SQuAD| *in progress*| T
 MS MARCO| SQuAD| *in progress*| W
 WikiMovies| SQuAD| *in progress*| W

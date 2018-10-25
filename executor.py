@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -35,12 +35,23 @@ def main(args):
             answer_content = UTIL.load_csv_file(additional_files['answer'], "\t", None, logging)
             formatted_content = mctest.convert_to_squad(story_question_content, answer_content)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
-        elif args.source_dataset_format.lower() == 'insuranceqa' and args.destination_dataset_format.lower() == 'squad' :
+        elif args.source_dataset_format.lower() == 'insuranceqa' and args.destination_dataset_format.lower() == 'squad':
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             voc = insuranceqa.load_vocab(additional_files['voc'])
             questions, a_to_q_map = insuranceqa.load_questions(args.source_file_path, voc)
             answers = insuranceqa.load_answers(additional_files['answer'], voc)
             formatted_content = insuranceqa.convert_to_squad(questions, answers, a_to_q_map)
+            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'triviaqa' and args.destination_dataset_format.lower() == 'squad':
+            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
+            wiki = additional_files['wikipedia']
+            web = additional_files['web']
+            seed = additional_files['seed']
+            max_num_of_tokens = additional_files['max_num_of_tokens']
+            sample_size = additional_files['sample_size']
+
+            qa_file = UTIL.load_json_file(args.source_file_path)
+            formatted_content = triviaqa.convert_to_squad_format(qa_file, args.destination_file_path, wiki, web, sample_size, seed, max_num_of_tokens)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
         else:
             pass
