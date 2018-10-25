@@ -25,7 +25,7 @@ WikiQA| SQuAD| *--on hold--*| T
 InsuranceQA v1| SQuAD| **completed**| T
 InsuranceQA v2| SQuAD| **completed**| T
 Web Questions| SQuAD| *--on hold--*| T
-TriviaQA| SQuAD| *completed*| T
+TriviaQA| SQuAD| **completed**| T
 NarrativeQA| SQuAD| *in progress*| T
 MS MARCO| SQuAD| *in progress*| W
 WikiMovies| SQuAD| *in progress*| W
