@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -49,9 +49,26 @@ def main(args):
             seed = additional_files['seed']
             max_num_of_tokens = additional_files['max_num_of_tokens']
             sample_size = additional_files['sample_size']
-
             qa_file = UTIL.load_json_file(args.source_file_path)
             formatted_content = triviaqa.convert_to_squad_format(qa_file, args.destination_file_path, wiki, web, sample_size, seed, max_num_of_tokens)
+            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'wikiqa' and args.destination_dataset_format.lower() == 'squad':
+            story_question_content = UTIL.load_csv_file(args.source_file_path, "\t", 'infer', logging)
+            formatted_content = wikiqa.convert_to_squad(story_question_content)
+            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'narrativeqa' and args.destination_dataset_format.lower() == 'squad':
+            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
+            story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
+            question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
+            set_type = additional_files['set']
+            formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
+            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'webqa' and args.destination_dataset_format.lower() == 'squad':
+            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
+            story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
+            question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
+            set_type = additional_files['set']
+            formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
         else:
             pass

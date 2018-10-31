@@ -48,7 +48,7 @@ def load_csv_file(file_path, sep, header, logging):
     content = None
     try:
         with open(file_path, 'r') as f_in:
-            content = pd.read_csv("/home/jackalhan/Downloads/mc160.dev.ans.txt",sep=sep, header=header)
+            content = pd.read_csv(file_path,sep=sep, header=header)
         if logging is not None:
             logging.info(
                 '(function {}) is run successfuly and load the file: {}'.format(load_csv_file.__name__, file_path))
