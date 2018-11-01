@@ -7,7 +7,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import util as UTIL
 
-def convert_to_squad_format(qa_content, squad_file, wikipedia_dir, web_dir, sample_size, seed, max_num_of_tokens):
+def convert_to_squad_format(qa_content, wikipedia_dir, web_dir, sample_size, seed, max_num_of_tokens):
     qa_json = read_triviaqa_data(qa_content)
     qad_triples = get_qad_triples(qa_json)
 

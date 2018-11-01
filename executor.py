@@ -50,7 +50,7 @@ def main(args):
             max_num_of_tokens = additional_files['max_num_of_tokens']
             sample_size = additional_files['sample_size']
             qa_file = UTIL.load_json_file(args.source_file_path)
-            formatted_content = triviaqa.convert_to_squad_format(qa_file, args.destination_file_path, wiki, web, sample_size, seed, max_num_of_tokens)
+            formatted_content = triviaqa.convert_to_squad_format(qa_file, wiki, web, sample_size, seed, max_num_of_tokens)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
         elif args.source_dataset_format.lower() == 'wikiqa' and args.destination_dataset_format.lower() == 'squad':
             story_question_content = UTIL.load_csv_file(args.source_file_path, "\t", 'infer', logging)
