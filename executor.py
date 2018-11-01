@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -125,7 +125,7 @@ def main(args):
 
         elif args.from_format.lower() == 'webqa' and args.to_format.lower() == 'squad':
             """            
-           --log_path="~/log.log" 
+            --log_path="~/log.log" 
             --data_path="~/data/" 
             --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
             --from_format="webqa" 
@@ -138,7 +138,19 @@ def main(args):
             set_type = source_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'msmarco' and args.destination_dataset_format.lower() == 'squad':
 
+            """            
+            --log_path="~/log.log" 
+            --data_path="~/data/" 
+            --from_files="source:dev_2.1.json" 
+            --from_format="msmarco" 
+            --to_format="squad"
+            --to_file_name="dev_2.1.json" #it is gonna be renamed as "[from_to]_filename.what" 
+            """
+            in_content = UTIL.load_json_file(source_file, logging)
+            formatted_content = msmarco.convert_to_squad(in_content)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
         else:
             pass
         logging.info('(function {}) Finished'.format(main.__name__))
