@@ -10,7 +10,6 @@ Dataset Converter for QA Tasks: from one format to other one
 * [InsuranceQA v2](https://github.com/shuzi/insuranceQA) & [InsuranceQA v1](https://github.com/shuzi/insuranceQA)
 * [MS_MARCO](http://www.msmarco.org/)
 * [WikiMovies](https://arxiv.org/abs/1606.03126)
-* [NewsQA](https://arxiv.org/abs/1712.07040)
 * [TriviaQA](http://nlp.cs.washington.edu/triviaqa/)
 * [Simple Questions](https://arxiv.org/abs/1506.02075)
 * [NarrativeQA](https://github.com/deepmind/narrativeqa)
@@ -24,7 +23,6 @@ MCTest| SQuAD| **completed**| T
 WikiQA| SQuAD| **completed**| T
 InsuranceQA v1| SQuAD| **completed**| T
 InsuranceQA v2| SQuAD| **completed**| T
-NewsQA| SQuAD| *--processing--*| T
 TriviaQA| SQuAD| **completed**| T
 NarrativeQA| SQuAD| **completed**| T
 MS MARCO| SQuAD| *in progress*| W
