@@ -11,131 +11,131 @@ def get_parser():
 
     parser.add_argument('--log_path',help="path to the log file")
     parser.add_argument('--log_info',default="INFO", help="logging level")
-    parser.add_argument('--source_file_path', help="path to the source file to be converted")
-    parser.add_argument('--additional_source_files', help="addition/supporting files that are in the same path as source, could be coma-seperated ',', file type can be also identified with ':'. Ex: 'voc:vocabulary.txt, 'answer:answer.txt'")
-    parser.add_argument('--source_dataset_format', help="dataset name of the source format")
-    parser.add_argument('--destination_file_path', help="path to the destination file")
-    parser.add_argument('--destination_dataset_format', help="dataset name of the destination format")
+    parser.add_argument('--data_path', help="path to the source file to be converted")
+    parser.add_argument('--from_files', help="addition/supporting files that are in the same path as source, could be coma-seperated ',', file type can be also identified with ':'. Ex: 'voc:vocabulary.txt, 'answer:answer.txt'")
+    parser.add_argument('--from_format', help="dataset name of the source format")
+    parser.add_argument('--to_format', help="dataset name of the destination format")
+    parser.add_argument('--to_file_name', help="destination file name")
     return parser
 
 def main(args):
     try:
         logging.info('(function {}) Started'.format(main.__name__))
+
+        source_files = UTIL.parse_source_files(args.data_path, args.from_files, logging)
+        source_file = source_files['source']
+        destination_file = os.path.join(args.data_path, args.from_format.lower() + '_to_' + args.to_format.lower() + '_'+args.to_file_name)
+
         # TODO: 1) We need to create a interface class to have the same signature for all the formatters in ds_formatter folder.
         # TODO: 2) We need to create a generic approach to convert any type to any type not only any type to squad.
         # TODO: 3) can we have better approach to handle the following if/else scenarios
         # TODO: 4) we may also put some kind of field wrapper to handle whether which fields are gonna be filled with dummy and which fields are gonna be filled with real values.
-        if args.source_dataset_format.lower() == 'qangaroo' and args.destination_dataset_format.lower() == 'squad' :
+        if args.from_format.lower() == 'qangaroo' and args.to_format.lower() == 'squad' :
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="source:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="qangaroo" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
-
-            in_content = UTIL.load_json_file(args.source_file_path, logging)
+            in_content = UTIL.load_json_file(source_file, logging)
             formatted_content = qangaroo.convert_to_squad(in_content)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
 
-        elif args.source_dataset_format.lower() == 'mctest' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'mctest' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="source:mc160.dev.tsv" 
+            --from_format="mctest" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
-            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
-            story_question_content = UTIL.load_csv_file(args.source_file_path,"\t", None, logging)
-            answer_content = UTIL.load_csv_file(additional_files['answer'], "\t", None, logging)
-            formatted_content = mctest.convert_to_squad(story_question_content, answer_content)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
 
-        elif args.source_dataset_format.lower() == 'insuranceqa' and args.destination_dataset_format.lower() == 'squad':
+            story_question_content = UTIL.load_csv_file(source_file,"\t", None, logging)
+            #answer_content = UTIL.load_csv_file(additional_files['answer'], "\t", None, logging)
+            formatted_content = mctest.convert_to_squad(story_question_content)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
+
+        elif args.from_format.lower() == 'insuranceqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="insuranceqa" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
-            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
-            voc = insuranceqa.load_vocab(additional_files['voc'])
-            questions, a_to_q_map = insuranceqa.load_questions(args.source_file_path, voc)
-            answers = insuranceqa.load_answers(additional_files['answer'], voc)
+            voc = insuranceqa.load_vocab(source_files['voc'])
+            questions, a_to_q_map = insuranceqa.load_questions(source_file, voc)
+            answers = insuranceqa.load_answers(source_files['answer'], voc)
             formatted_content = insuranceqa.convert_to_squad(questions, answers, a_to_q_map)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
 
-        elif args.source_dataset_format.lower() == 'triviaqa' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'triviaqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="triviaqa" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
-            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
-            wiki = additional_files['wikipedia']
-            web = additional_files['web']
-            seed = additional_files['seed']
-            max_num_of_tokens = additional_files['max_num_of_tokens']
-            sample_size = additional_files['sample_size']
-            qa_file = UTIL.load_json_file(args.source_file_path)
+            wiki = source_files['wikipedia']
+            web = source_files['web']
+            seed = source_files['seed']
+            max_num_of_tokens = source_files['max_num_of_tokens']
+            sample_size = source_files['sample_size']
+            qa_file = UTIL.load_json_file(source_file)
             formatted_content = triviaqa.convert_to_squad_format(qa_file, wiki, web, sample_size, seed, max_num_of_tokens)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
-        elif args.source_dataset_format.lower() == 'wikiqa' and args.destination_dataset_format.lower() == 'squad':
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
+        elif args.from_format.lower() == 'wikiqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="wikiqa" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
-            story_question_content = UTIL.load_csv_file(args.source_file_path, "\t", 'infer', logging)
+            story_question_content = UTIL.load_csv_file(source_file, "\t", 'infer', logging)
             formatted_content = wikiqa.convert_to_squad(story_question_content)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
 
-        elif args.source_dataset_format.lower() == 'narrativeqa' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'narrativeqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+            --data_path="~/data/" 
+            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="narrativeqa" 
+            --to_format="squad" 
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
-            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
-            story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
-            question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
-            set_type = additional_files['set']
+            story_summary_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
+            question_content = UTIL.load_csv_file(source_files['qaps'], ",", 'infer', logging)
+            set_type = source_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
-            UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
 
-        elif args.source_dataset_format.lower() == 'webqa' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'webqa' and args.to_format.lower() == 'squad':
             """            
-            --log_path="~/log.log" 
-            --source_file="~/data/input/question.train.token_idx.label" 
-            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
-            --source_dataset_format="insuranceqa" 
-            --destination_dataset_format="squad" 
-            --destination_file_path="~/data/output/squad_formatted_train.json"
+           --log_path="~/log.log" 
+            --data_path="~/data/" 
+            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --from_format="webqa" 
+            --to_format="squad"
+            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what" 
             """
 
-            additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
-            story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
-            question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
-            set_type = additional_files['set']
+            story_summary_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
+            question_content = UTIL.load_csv_file(source_files['qaps'], ",", 'infer', logging)
+            set_type = source_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
 
@@ -148,11 +148,13 @@ def main(args):
 if __name__ == '__main__':
     args = get_parser().parse_args()
     assert args.log_path is not None, "No log path found at {}".format(args.log_path)
-    assert args.source_file_path is not None, "No source file path found at {}".format(args.source_file_path)
-    assert args.source_dataset_format is not None, "No source_dataset_format found {}".format(args.source_dataset_format)
-    assert args.destination_file_path is not None, "No destination file path found at {}".format(args.destination_file_path)
-    assert args.destination_dataset_format is not None, "No destination dataset format found {}".format(
-        args.destination_dataset_format)
+    assert args.data_path is not None, "No folder path found at {}".format(args.data_path)
+    assert args.from_format is not None, "No 'from format' found {}".format(args.from_format)
+    assert args.from_files is not None, "No 'from files' format found {}".format(args.from_files)
+    assert args.to_format is not None, "No 'to format' dataset format found {}".format(
+        args.to_format)
+    assert args.to_file_name is not None, "No 'to file name' dataset format found {}".format(
+        args.to_file_name)
 
     if args.log_info.lower() =='info':
         log_info = logging.INFO

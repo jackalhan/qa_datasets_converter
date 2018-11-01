@@ -1,4 +1,4 @@
-def convert_to_squad(story_question_content, answer_content):
+def convert_to_squad(story_question_content):
     """
     :param story_question_content:
     :param answer_content:
@@ -16,26 +16,28 @@ def convert_to_squad(story_question_content, answer_content):
         # Format is deeply nested JSON -- prepare data structures
         data_ELEMENT = dict()
         data_ELEMENT['title'] = 'dummyTitle'
+
         paragraphs = []
         paragraphs_ELEMENT = dict()
-        qas = []
-        qas_ELEMENT = dict()
-        qas_ELEMENT_ANSWERS = []
-        ANSWERS_ELEMENT = dict()
 
-        qas_ELEMENT['id'] = datum[0]
-        qas_ELEMENT['question'] = datum[1].replace("one: ", "").replace("multiple: ", "")
-
-        superdocument = datum[2]
-
-        ANSWERS_ELEMENT['answer_start'] = -1
-        ANSWERS_ELEMENT['text'] = 'dummyAnswer'
-
+        superdocument = datum[2].replace('\\newline', '')
         paragraphs_ELEMENT['context'] = superdocument
-        qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
 
-        qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
-        qas.append(qas_ELEMENT)
+        qas = []
+        # it has 4 questions in each context
+        question_column_start_indx = 3
+        question_size = 4
+        for q_indx in range(question_size):
+            qas_ELEMENT = dict()
+            ANSWERS_ELEMENT = dict()
+            qas_ELEMENT_ANSWERS = []
+            qas_ELEMENT['id'] = datum[0] + "." +str(q_indx)
+            qas_ELEMENT['question'] = datum[q_indx + question_column_start_indx if q_indx < 1 else q_indx * 5 + 3].replace("one: ", "").replace("multiple: ", "")
+            ANSWERS_ELEMENT['answer_start'] = -1
+            ANSWERS_ELEMENT['text'] = 'dummyAnswer'
+            qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
+            qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
+            qas.append(qas_ELEMENT)
 
         paragraphs_ELEMENT['qas'] = qas
         paragraphs.append(paragraphs_ELEMENT)

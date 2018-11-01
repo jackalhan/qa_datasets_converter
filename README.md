@@ -38,9 +38,9 @@ You can find the sample call for each format type in the ``` executor.py ``` fil
 ```
 python executor.py 
 --log_path="~/log.log" 
---source_file="~/data/input/question.train.token_idx.label" 
---additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
---source_dataset_format="insuranceqa" 
---destination_dataset_format="squad" 
---destination_file_path="~/data/output/squad_formatted_train.json"
+--data_path="~/data/" 
+--from_files="source:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+--from_format="insuranceqa" 
+--to_format="squad" 
+--to_file_name="filename.what" # it is gonna be renamed as "[from_to]_filename.what"
 ```
