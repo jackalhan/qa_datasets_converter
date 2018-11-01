@@ -32,12 +32,15 @@ Simple Questions| SQuAD| *in progress*| W
 Ubuntu Corpus v2| SQuAD| *in progress*| W
 
 #### Example Call :
+
+You can find the sample call for each format type in the ``` executor.py ``` file such as below. 
+
 ```
 python executor.py 
 --log_path="~/log.log" 
---source_file="~/question.train.token_idx.label" 
+--source_file="~/data/input/question.train.token_idx.label" 
 --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
 --source_dataset_format="insuranceqa" 
 --destination_dataset_format="squad" 
---destination_file_path="~/squad_formatted_train.json"
+--destination_file_path="~/data/output/squad_formatted_train.json"
 ```

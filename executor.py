@@ -26,23 +26,62 @@ def main(args):
         # TODO: 3) can we have better approach to handle the following if/else scenarios
         # TODO: 4) we may also put some kind of field wrapper to handle whether which fields are gonna be filled with dummy and which fields are gonna be filled with real values.
         if args.source_dataset_format.lower() == 'qangaroo' and args.destination_dataset_format.lower() == 'squad' :
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             in_content = UTIL.load_json_file(args.source_file_path, logging)
             formatted_content = qangaroo.convert_to_squad(in_content)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         elif args.source_dataset_format.lower() == 'mctest' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             story_question_content = UTIL.load_csv_file(args.source_file_path,"\t", None, logging)
             answer_content = UTIL.load_csv_file(additional_files['answer'], "\t", None, logging)
             formatted_content = mctest.convert_to_squad(story_question_content, answer_content)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         elif args.source_dataset_format.lower() == 'insuranceqa' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             voc = insuranceqa.load_vocab(additional_files['voc'])
             questions, a_to_q_map = insuranceqa.load_questions(args.source_file_path, voc)
             answers = insuranceqa.load_answers(additional_files['answer'], voc)
             formatted_content = insuranceqa.convert_to_squad(questions, answers, a_to_q_map)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         elif args.source_dataset_format.lower() == 'triviaqa' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             wiki = additional_files['wikipedia']
             web = additional_files['web']
@@ -53,23 +92,53 @@ def main(args):
             formatted_content = triviaqa.convert_to_squad_format(qa_file, wiki, web, sample_size, seed, max_num_of_tokens)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
         elif args.source_dataset_format.lower() == 'wikiqa' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             story_question_content = UTIL.load_csv_file(args.source_file_path, "\t", 'infer', logging)
             formatted_content = wikiqa.convert_to_squad(story_question_content)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         elif args.source_dataset_format.lower() == 'narrativeqa' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
             question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
             set_type = additional_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         elif args.source_dataset_format.lower() == 'webqa' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --source_file="~/data/input/question.train.token_idx.label" 
+            --additional_source_files="voc:vocabulary,answer:answers.label.token_idx" 
+            --source_dataset_format="insuranceqa" 
+            --destination_dataset_format="squad" 
+            --destination_file_path="~/data/output/squad_formatted_train.json"
+            """
+
             additional_files = UTIL.parse_additional_files(args.source_file_path, args.additional_source_files, logging)
             story_summary_content = UTIL.load_csv_file(args.source_file_path, ",", 'infer', logging)
             question_content = UTIL.load_csv_file(additional_files['qaps'], ",", 'infer', logging)
             set_type = additional_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
+
         else:
             pass
         logging.info('(function {}) Finished'.format(main.__name__))
