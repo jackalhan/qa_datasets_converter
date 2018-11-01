@@ -15,7 +15,7 @@ Dataset Converter for QA Tasks: from one format to other one
 * [Simple Questions](https://arxiv.org/abs/1506.02075)
 * [NarrativeQA paper](https://arxiv.org/abs/1712.07040) | [NarrativeQA data](https://github.com/deepmind/narrativeqa)
 * [Ubuntu Dialogue Corpus v2.0](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
-* [NewsQA paper](https://datasets.maluuba.com/NewsQA) | [NewsQA data](https://arxiv.org/abs/1611.09830)
+* [NewsQA paper](https://arxiv.org/abs/1611.09830) | [NewsQA data](https://datasets.maluuba.com/NewsQA)
 
 #### Supported Formats :
 Source | Destination | Status | Owner
