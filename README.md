@@ -27,7 +27,7 @@ InsuranceQA v1| SQuAD| **completed**| T
 InsuranceQA v2| SQuAD| **completed**| T
 TriviaQA| SQuAD| **completed**| T
 NarrativeQA| SQuAD| **completed**| T
-MS MARCO| SQuAD| *in progress*| W
+MS MARCO| SQuAD| *completed*| W
 WikiMovies| SQuAD| *on hold*| W
 Simple Questions| SQuAD| *on hold*| W
 Ubuntu Corpus v2| SQuAD| *in progress*| W
