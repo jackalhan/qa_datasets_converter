@@ -25,7 +25,7 @@ def convert_to_squad(source_data):
         qas_ELEMENT['id'] = datum['id']
         qas_ELEMENT['question'] = datum['query']
 
-        superdocument = " <new_doc> ".join(datum['supports'])
+        superdocument = " ".join(datum['supports'])
 
         answer_position = superdocument.find(datum['answer'])
         if answer_position == -1:

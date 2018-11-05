@@ -14,7 +14,7 @@ Dataset Converter for QA Tasks: from one format to other one
 * [TriviaQA paper](https://arxiv.org/abs/1705.03551) | [TriviaQA data](http://nlp.cs.washington.edu/triviaqa/)
 * [Simple Questions](https://arxiv.org/abs/1506.02075)
 * [NarrativeQA paper](https://arxiv.org/abs/1712.07040) | [NarrativeQA data](https://github.com/deepmind/narrativeqa)
-* [Ubuntu Dialogue Corpus v2.0](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
+* [Ubuntu Dialogue Corpus v2.0 paper](https://arxiv.org/abs/1506.08909) | [Ubuntu Dialogue Corpus v2.0 data](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
 * [NewsQA paper](https://arxiv.org/abs/1611.09830) | [NewsQA data](https://datasets.maluuba.com/NewsQA)
 
 #### Supported Formats :
@@ -27,7 +27,7 @@ InsuranceQA v1| SQuAD| **completed**| T
 InsuranceQA v2| SQuAD| **completed**| T
 TriviaQA| SQuAD| **completed**| T
 NarrativeQA| SQuAD| **completed**| T
-MS MARCO| SQuAD| *completed*| W
+MS MARCO| SQuAD| **completed**| W
 WikiMovies| SQuAD| *on hold*| W
 Simple Questions| SQuAD| *on hold*| W
 Ubuntu Corpus v2| SQuAD| *in progress*| W

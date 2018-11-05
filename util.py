@@ -64,9 +64,10 @@ def parse_source_files(data_path, source_files, logging, item_seperator=',', k_v
     try:
         for _ in source_files.split(item_seperator):
             _splitted = _.split(k_v_seperator)
-            key = _splitted[0]
-            value = _splitted[1]
-            if not os.path.isfile(_):
+            key = _splitted[0].strip()
+            value = _splitted[1].strip()
+            print("indx:{}, key:{}, value:{}".format(_, key,value))
+            if os.path.isfile(os.path.join(source_path, value)) or os.path.isdir(os.path.join(source_path, value)):
                 _additional_files[key] = os.path.join(source_path, value)
             else:
                 _additional_files[key] = value

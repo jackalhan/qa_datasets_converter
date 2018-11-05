@@ -65,16 +65,33 @@ def load_answers(answers_file, voc):
 def load_questions(question_file, voc):
   questions = []
   a_to_q_map = dict()
+  x = dict()
+  ground_truth, no_ground_truth = 0, 0
   with open(question_file, 'r') as f_in:
       for q_indx, line in enumerate(f_in):
-        q, ids = line.strip().split('\t')
+        try:
+            type, q = line.strip().split('\t')
+        except:
+            type, q, ids, pooled_answers = line.strip().split('\t')
         q = ' '.join([voc[wid] for wid in q.split(' ')])
         questions.append(q)
-        for _id in ids.split(' '):
-            if _id not in a_to_q_map:
-                a_to_q_map[int(_id)] = [q_indx]
-            else:
-                temp_qs = a_to_q_map[int(_id)]
-                temp_qs = temp_qs.append(int(_id))
-                a_to_q_map[int(_id)] = temp_qs
+        if type not in x:
+            x[type] = 1
+        else:
+            x[type] = x[type] + 1
+
+        if len([1 for gt in ids.split(' ') if gt in pooled_answers.split(' ')]) <= 0:
+            no_ground_truth +=1
+        else:
+            ground_truth += 1
+            for _id in ids.split(' '):
+                if _id not in a_to_q_map:
+                    a_to_q_map[int(_id)] = [q_indx]
+                else:
+                    temp_qs = a_to_q_map[int(_id)]
+                    temp_qs = temp_qs.append(int(_id))
+                    a_to_q_map[int(_id)] = temp_qs
+      print(x)
+      print("Total items: {}".format(sum([v for k, v in x.items()])))
+      print('Ground Truth: {}, No Ground_Truth: {}'.format(ground_truth, no_ground_truth))
   return questions, a_to_q_map

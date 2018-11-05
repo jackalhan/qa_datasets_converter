@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -33,11 +33,11 @@ def main(args):
         if args.from_format.lower() == 'qangaroo' and args.to_format.lower() == 'squad' :
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
-            --from_files="source:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --data_path="~/data/qangaroo_v1.1/wikihop" 
+            --from_files="source:dev.json"
             --from_format="qangaroo" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="dev.json" #it is gonna be renamed as "[from_to]_filename.what"
             """
             in_content = UTIL.load_json_file(source_file, logging)
             formatted_content = qangaroo.convert_to_squad(in_content)
@@ -50,7 +50,7 @@ def main(args):
             --from_files="source:mc160.dev.tsv" 
             --from_format="mctest" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="mc160.dev.json" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
 
@@ -62,11 +62,11 @@ def main(args):
         elif args.from_format.lower() == 'insuranceqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
-            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --data_path="~/data/insuranceqa_v2" 
+            --from_files="source:InsuranceQA.question.anslabel.token.1500.pool.solr.test.encoded,voc:vocabulary.txt,answer:InsuranceQA.label2answer.token.encoded"
             --from_format="insuranceqa" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="1500.test.json"
             """
 
             voc = insuranceqa.load_vocab(source_files['voc'])
@@ -78,29 +78,29 @@ def main(args):
         elif args.from_format.lower() == 'triviaqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
-            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --data_path="~/data/triviaqa/" 
+            --from_files=""source:qa/wikipedia-train.json, wikipedia:evidence/wikipedia,web:evidence/web,seed:10,token_size:2000,sample_size:1000000"
             --from_format="triviaqa" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="wikipedia-train-long.json"
             """
 
             wiki = source_files['wikipedia']
             web = source_files['web']
             seed = source_files['seed']
-            max_num_of_tokens = source_files['max_num_of_tokens']
+            max_num_of_tokens = source_files['token_size']
             sample_size = source_files['sample_size']
-            qa_file = UTIL.load_json_file(source_file)
+            qa_file = UTIL.load_json_file(source_file, logging)
             formatted_content = triviaqa.convert_to_squad_format(qa_file, wiki, web, sample_size, seed, max_num_of_tokens)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
         elif args.from_format.lower() == 'wikiqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
-            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --data_path="~/data/WikiQACorpus" 
+            --from_files="source:WikiQA-dev.tsv"
             --from_format="wikiqa" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="dev.json"
             """
 
             story_question_content = UTIL.load_csv_file(source_file, "\t", 'infer', logging)
@@ -110,11 +110,11 @@ def main(args):
         elif args.from_format.lower() == 'narrativeqa' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
-            --from_files="label:question.train.token_idx.label,voc:vocabulary,answer:answers.label.token_idx" 
+            --data_path="~/data/narrativeqa" 
+            --from_files="source:summaries.csv,set:train,qaps:qaps.csv" 
             --from_format="narrativeqa" 
             --to_format="squad" 
-            --to_file_name="filename.what" #it is gonna be renamed as "[from_to]_filename.what"
+            --to_file_name="train.json" #it is gonna be renamed as "[from_to]_filename.what"
             """
 
             story_summary_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
@@ -124,6 +124,9 @@ def main(args):
             UTIL.dump_json_file(destination_file, formatted_content, logging)
 
         elif args.from_format.lower() == 'webqa' and args.to_format.lower() == 'squad':
+            " ************************************************************ "
+            " *********************** ON-HOLD *****************************"
+            " ************************************************************ "
             """            
             --log_path="~/log.log" 
             --data_path="~/data/" 
@@ -142,7 +145,7 @@ def main(args):
 
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/" 
+            --data_path="~/data/msmarco" 
             --from_files="source:dev_2.1.json" 
             --from_format="msmarco" 
             --to_format="squad"
@@ -150,6 +153,33 @@ def main(args):
             """
             in_content = UTIL.load_json_file(source_file, logging)
             formatted_content = msmarco.convert_to_squad(in_content)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'ubuntu' and args.destination_dataset_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --data_path="~/data/newsqa" 
+            --from_files="source:newsqa-data-v1.csv,story:cnn_stories/"
+            --from_format="newsqa" 
+            --to_format="squad"
+            --to_file_name="news.json"
+            """
+            story_question_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
+            formatted_content = ubuntudialogue.convert_to_squad(story_question_content)
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
+        elif args.source_dataset_format.lower() == 'newsqa' and args.destination_dataset_format.lower() == 'squad':
+
+            """            
+            --log_path="~/log.log" 
+            --data_path="~/data/newsqa" 
+            --from_files="source:newsqa-data-v1.csv,story:cnn_stories/"
+            --from_format="newsqa" 
+            --to_format="squad"
+            --to_file_name="news.json"
+            """
+
+            story_question_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
+            context_content_path = source_files['story']
+            formatted_content = cnnnews.convert_to_squad(story_question_content, context_content_path)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
         else:
             pass

@@ -11,7 +11,7 @@ def convert_to_squad_format(qa_content, wikipedia_dir, web_dir, sample_size, see
     qa_json = read_triviaqa_data(qa_content)
     qad_triples = get_qad_triples(qa_json)
 
-    random.seed(seed)
+    random.seed(int(seed))
     random.shuffle(qad_triples)
 
     data = []
@@ -19,7 +19,7 @@ def convert_to_squad_format(qa_content, wikipedia_dir, web_dir, sample_size, see
         qid = qad['QuestionId']
 
         text = get_text(qad, qad['Source'], web_dir, wikipedia_dir)
-        selected_text = select_relevant_portion(text, max_num_of_tokens)
+        selected_text = select_relevant_portion(text, int(max_num_of_tokens))
 
         question = qad['Question']
         para = {'context': selected_text, 'qas': [{'question': question, 'answers': []}]}
@@ -35,7 +35,7 @@ def convert_to_squad_format(qa_content, wikipedia_dir, web_dir, sample_size, see
         else:
             qa['answers'].append({'text': ans_string, 'answer_start': index})
 
-        if qa_json['Split'] == 'train' and len(data) >= sample_size and qa_json['Domain'] == 'Web':
+        if qa_json['Split'] == 'train' and len(data) >= int(sample_size) and qa_json['Domain'] == 'Web':
             break
 
     squad = {'data': data, 'version': qa_json['Version']}
