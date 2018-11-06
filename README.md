@@ -18,20 +18,20 @@ Dataset Converter for QA Tasks: from one format to other one
 * [NewsQA paper](https://arxiv.org/abs/1611.09830) | [NewsQA data](https://datasets.maluuba.com/NewsQA)
 
 #### Supported Formats :
-Source | Destination | Status | Owner
------------- | ------------- | ------------- | -------------
-QAngaroo| SQuAD| **completed**| T
-MCTest| SQuAD| **completed**| T
-WikiQA| SQuAD| **completed**| T
-InsuranceQA v1| SQuAD| **completed**| T
-InsuranceQA v2| SQuAD| **completed**| T
-TriviaQA| SQuAD| **completed**| T
-NarrativeQA| SQuAD| **completed**| T
-MS MARCO| SQuAD| **completed**| W
-WikiMovies| SQuAD| *on hold*| W
-Simple Questions| SQuAD| *on hold*| W
-Ubuntu Corpus v2| SQuAD| *in progress*| W
-NewsQA| SQuAD| *in progress*| W
+Source | Destination | Status
+------------ | ------------- | -------------
+QAngaroo| SQuAD| **completed**
+MCTest| SQuAD| **completed**
+WikiQA| SQuAD| **completed**
+InsuranceQA v1| SQuAD| **completed**
+InsuranceQA v2| SQuAD| **completed**
+TriviaQA| SQuAD| **completed**
+NarrativeQA| SQuAD| **completed**
+MS MARCO| SQuAD| **completed**
+WikiMovies| SQuAD| *on hold*
+Simple Questions| SQuAD| *on hold*
+Ubuntu Corpus v2| SQuAD| *completed*
+NewsQA| SQuAD| *completed*
 
 #### Example Call :
 
