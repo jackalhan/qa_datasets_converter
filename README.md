@@ -1,5 +1,5 @@
 # Dataset Converter for Question-Answering (QA) Tasks 
-Dataset Converter for QA Tasks: from one format to other one
+Dataset Converter for natural language processing tasks such QA(question-answering) Tasks: from one format to other one
 
 #### QA Dataset Paper & Data :
 
@@ -30,8 +30,8 @@ NarrativeQA| SQuAD| **completed**
 MS MARCO| SQuAD| **completed**
 WikiMovies| SQuAD| *on hold*
 Simple Questions| SQuAD| *on hold*
-Ubuntu Corpus v2| SQuAD| *completed*
-NewsQA| SQuAD| *completed*
+Ubuntu Corpus v2| SQuAD| **completed**
+NewsQA| SQuAD| **completed**
 
 #### Example Call :
 
