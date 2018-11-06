@@ -141,7 +141,7 @@ def main(args):
             set_type = source_files['set']
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
-        elif args.source_dataset_format.lower() == 'msmarco' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'msmarco' and args.to_format.lower() == 'squad':
 
             """            
             --log_path="~/log.log" 
@@ -154,19 +154,19 @@ def main(args):
             in_content = UTIL.load_json_file(source_file, logging)
             formatted_content = msmarco.convert_to_squad(in_content)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
-        elif args.source_dataset_format.lower() == 'ubuntu' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'ubuntu' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/newsqa" 
-            --from_files="source:newsqa-data-v1.csv,story:cnn_stories/"
-            --from_format="newsqa" 
+            --data_path="~/data/ubuntu" 
+            --from_files="source:valid.csv"
+            --from_format="ubuntu" 
             --to_format="squad"
-            --to_file_name="news.json"
+            --to_file_name="valid.json"
             """
             story_question_content = UTIL.load_csv_file(source_file, ",", 'infer', logging)
             formatted_content = ubuntudialogue.convert_to_squad(story_question_content)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
-        elif args.source_dataset_format.lower() == 'newsqa' and args.destination_dataset_format.lower() == 'squad':
+        elif args.from_format.lower() == 'newsqa' and args.to_format.lower() == 'squad':
 
             """            
             --log_path="~/log.log" 
