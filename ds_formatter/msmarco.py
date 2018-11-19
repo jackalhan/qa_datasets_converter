@@ -86,6 +86,8 @@ def convert_to_squad(story_question_content):
         #correct_context is a list
         correct_context= [x for x in passages[key] if x['is_selected'] == 1]
         #some query(question) has more than 1 correct contexts, we just pick the first one as the context
+        if len(correct_context) == 0:
+            continue
         superdocument = correct_context[0]['passage_text']
 
         ANSWERS_ELEMENT['answer_start'] = -1
