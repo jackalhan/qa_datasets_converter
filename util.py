@@ -1,6 +1,12 @@
 import json
 import pandas as pd
 import os
+import spacy
+nlp = spacy.blank("en")
+def word_tokenize(sent):
+    doc = nlp(sent)
+    return [token.text for token in doc]
+
 def load_json_file(file_path, logging, encoding='utf-8'):
     content = None
     try:
@@ -31,6 +37,18 @@ def dump_json_file(file_path, content, logging, encoding='utf-8'):
 #     with open(json_file, mode, encoding=encoding) as outfile:
 #         json.dump(json_object, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
+# def dump_txt_contents(file_path, content, logging, encoding='utf-8'):
+#     try:
+#         with open(file_path, 'w', encoding=encoding) as f_out:
+#             f_out.dump(content, f_out, indent=1)
+#         if logging is not None:
+#             logging.info(
+#                 '(function {}) is run successfuly and write the file: {}'.format(dump_json_file.__name__,
+#                                                                                  file_path))
+#     except Exception as e:
+#         if logging is not None:
+#             logging.error('(function {}) has an error: {}'.format(dump_json_file.__name__, e))
+#         raise
 
 def get_file_contents(filename, encoding='utf-8'):
     with open(filename, encoding=encoding) as f:

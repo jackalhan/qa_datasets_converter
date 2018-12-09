@@ -4,7 +4,8 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews, squad
+
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -106,6 +107,24 @@ def main(args):
             story_question_content = UTIL.load_csv_file(source_file, "\t", 'infer', logging)
             formatted_content = wikiqa.convert_to_squad(story_question_content)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
+
+        elif args.from_format.lower() == 'squad' and args.to_format.lower() == 'matchzoo':
+            """       
+            **sample.txt**: Each line is the raw query and raw document text of a document. The format is "label \t query \t document_txt".     
+            --log_path="~/log.log" 
+            --data_path="~/data/squad" 
+            --from_files="source:dev-v1.1.json,negative_sampling:100"
+            --from_format="squad" 
+            --to_format="matchzoo" 
+            --to_file_name="dev.txt"
+            """
+            negative_samp_count = int(source_files['negative_sampling'])
+            content = UTIL.load_json_file(source_file, logging)
+            generator = squad.yield_to_matchzoo(content, negative_samp_count)
+            open(destination_file, "w").write('\n'.join(data for data in generator))
+
+            #UTIL.dump_json_file(destination_file, formatted_content, logging)
+
 
         elif args.from_format.lower() == 'narrativeqa' and args.to_format.lower() == 'squad':
             """            
