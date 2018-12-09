@@ -119,7 +119,7 @@ def main(args):
             --to_file_name="dev.txt"
             """
             negative_samp_count = int(source_files['negative_sampling'])
-            sample_size = int(source_files['q_len'])
+            q_len = int(source_files['q_len'])
             content = UTIL.load_json_file(source_file, logging)
             generator = squad.yield_to_matchzoo(content, q_len, negative_samp_count)
             open(destination_file, "w").write('\n'.join(data for data in generator))
