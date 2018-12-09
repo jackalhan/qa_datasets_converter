@@ -95,7 +95,7 @@ def fixing_the_token_problem(tokenized_questions, tokenized_paragraphs):
         fixed_tokenized_paragraph.append(tokens)
     return fixed_tokenized_question, fixed_tokenized_paragraph
 
-def yield_to_matchzoo(question_answer_content, negative_sampling_count=100, max_tokens=-1):
+def yield_to_matchzoo(question_answer_content, q_len, negative_sampling_count=100, max_tokens=-1):
     """
     :param question_answer_document content:
     :return: yield matchzoo data
@@ -111,13 +111,13 @@ def yield_to_matchzoo(question_answer_content, negative_sampling_count=100, max_
     paragraphs_nontokenized = [" ".join(context) for context in tokenized_paragraphs]
     questions_nontokenized = [" ".join(context) for context in tokenized_questions]
 
-    for q_indx, question in enumerate(tqdm(questions_nontokenized)):
+    for q_indx, question in enumerate(tqdm(questions_nontokenized[0:q_len])):
         true_p_indx = q_to_ps[q_indx]
         true_paragraph = paragraphs_nontokenized[true_p_indx]
         temp_list = paragraphs_nontokenized.copy()
         del temp_list[true_p_indx]
         random.Random(q_indx).shuffle(temp_list)
-        for p_indx, paragraph in enumerate([true_paragraph] + temp_list[:negative_sampling_count]):
+        for p_indx, paragraph in enumerate([true_paragraph] + temp_list[:negative_sampling_count-1]):
             yield '\t'.join(['1' if p_indx == 0 else '0', question, paragraph])
 
 
