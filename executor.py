@@ -125,7 +125,19 @@ def main(args):
             open(destination_file, "w").write('\n'.join(data for data in generator))
 
             #UTIL.dump_json_file(destination_file, formatted_content, logging)
-
+        elif args.from_format.lower() == 'squad' and args.to_format.lower() == 'lucene':
+            """       
+            **sample.txt**: Each line is the raw query and raw document text of a document. The format is "label \t query \t document_txt".     
+            --log_path="~/log.log" 
+            --data_path="~/data/squad" 
+            --from_files="source:dev-v1.1.json,doc_type_verbose:2"
+            --from_format="squad" 
+            --to_format="matchzoo" 
+            --to_file_name="dev.txt"
+            """
+            doc_type_verbose = int(source_files['doc_type_verbose'])
+            content = UTIL.load_json_file(source_file, logging)
+            squad.convert_to_lucene(content, doc_type_verbose, args.data_path)
 
         elif args.from_format.lower() == 'narrativeqa' and args.to_format.lower() == 'squad':
             """            

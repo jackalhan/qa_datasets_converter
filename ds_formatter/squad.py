@@ -2,6 +2,7 @@ from tqdm import tqdm
 import util as UTIL
 from collections import Counter
 #from random import shuffle,random
+import os
 import random
 def convert_idx(text, tokens):
     current = 0
@@ -119,5 +120,38 @@ def yield_to_matchzoo(question_answer_content, q_len, negative_sampling_count=10
         random.Random(q_indx).shuffle(temp_list)
         for p_indx, paragraph in enumerate([true_paragraph] + temp_list[:negative_sampling_count-1]):
             yield '\t'.join(['1' if p_indx == 0 else '0', question, paragraph])
+def convert_to_lucene(question_answer_content, doc_type_verbose, source_path):
+    """
+    :param question_answer_document content:
+    :return: yield matchzoo data
+    At initial version, we are just focusing on the context and question, nothing more,
+    therefore we are ignoring the answer part as of now
+    """
+    word_counter, char_counter = Counter(), Counter()
+    examples, eval, questions, paragraphs, q_to_ps = process_squad_file(question_answer_content, word_counter, char_counter)
+    tokenized_paragraphs = tokenize_contexts(paragraphs, -1)
+    tokenized_questions = tokenize_contexts(questions, -1)
+    tokenized_questions, tokenized_paragraphs = fixing_the_token_problem(tokenized_questions, tokenized_paragraphs)
 
+    paragraphs_nontokenized = [" ".join(context) for context in tokenized_paragraphs]
+    questions_nontokenized = [" ".join(context) for context in tokenized_questions]
+
+    if doc_type_verbose == 1 or doc_type_verbose == 3:
+        # questions
+        print('Questions are getting dumped.')
+        dst_dir = UTIL.create_dir(os.path.join(source_path, 'lucene_questions'))
+        for indx, doc in tqdm(enumerate(questions_nontokenized)):
+            as_json = dict()
+            as_json['content'] = doc
+            #as_json['doc_id'] = indx
+            UTIL.dump_json_file(os.path.join(dst_dir, '{}.json'.format(indx)), as_json, None)
+    elif doc_type_verbose == 2 or doc_type_verbose == 3:
+        print('Paragraphs are getting dumped.')
+        dst_dir = UTIL.create_dir(os.path.join(source_path, 'lucene_paragraphs'))
+        for indx, doc in tqdm(enumerate(paragraphs_nontokenized)):
+            as_json = dict()
+            as_json['content'] = doc
+            #as_json['doc_id'] = indx
+            UTIL.dump_json_file(os.path.join(dst_dir, '{}.json'.format(indx)), as_json, None)
+    print('Completed.')
 

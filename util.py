@@ -20,7 +20,10 @@ def load_json_file(file_path, logging, encoding='utf-8'):
             logging.error('(function {}) has an error: {}'.format(load_json_file.__name__, e))
         raise
     return content
-
+def create_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    return dir
 def dump_json_file(file_path, content, logging, encoding='utf-8'):
     try:
         with open(file_path, 'w', encoding=encoding) as f_out:
