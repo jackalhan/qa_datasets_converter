@@ -177,17 +177,19 @@ def convert_to_short_squad(question_answer_content, q_len, negative_sampling_cou
             break
         if last_paragraph_indx is None:
             last_paragraph_indx = q_to_ps[q_indx]
+        qs = [i for i in q_to_ps if i == 0]
         current_paragraph_indx = q_to_ps[q_indx]
-        questions.append((q_indx, question))
+
         if current_paragraph_indx != last_paragraph_indx:
             data_ELEMENT = dict()
             data_ELEMENT['title'] = 'dummyTitle'
             paragraphs = []
             paragraphs_ELEMENT = dict()
-            superdocument = paragraphs_nontokenized[current_paragraph_indx]
+            superdocument = paragraphs_nontokenized[last_paragraph_indx]
             paragraphs_ELEMENT['context'] = superdocument
             qas = []
-            for _q_indx, _q in questions:
+            for _q_item in questions:
+                _q_indx, _q = _q_item[0], _q_item[1]
                 qas_ELEMENT = dict()
                 ANSWERS_ELEMENT = dict()
                 qas_ELEMENT_ANSWERS = []
@@ -198,11 +200,14 @@ def convert_to_short_squad(question_answer_content, q_len, negative_sampling_cou
                 qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
                 qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
                 qas.append(qas_ELEMENT)
+            paragraphs_ELEMENT['qas'] = qas
             paragraphs.append(paragraphs_ELEMENT)
 
             data_ELEMENT['paragraphs'] = paragraphs
             data.append(data_ELEMENT)
-        else:
-            questions.append(q_indx)
+            questions = []
+            last_paragraph_indx = current_paragraph_indx
+
+        questions.append((q_indx, question))
     squad_formatted_content['data'] = data
     return squad_formatted_content

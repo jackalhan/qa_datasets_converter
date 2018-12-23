@@ -146,7 +146,7 @@ def main(args):
             --from_files="source:dev-v1.1.json,q_len:1000,negative_sampling:100"
             --from_format="squad" 
             --to_format="short_squad" 
-            --to_file_name="dev.txt"
+            --to_file_name="dev.json"
             """
             negative_samp_count = int(source_files['negative_sampling'])
             q_len = int(source_files['q_len'])
