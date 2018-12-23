@@ -155,3 +155,54 @@ def convert_to_lucene(question_answer_content, doc_type_verbose, source_path):
             UTIL.dump_json_file(os.path.join(dst_dir, '{}.json'.format(indx)), as_json, None)
     print('Completed.')
 
+def convert_to_short_squad(question_answer_content, q_len, negative_sampling_count, max_tokens=-1):
+    word_counter, char_counter = Counter(), Counter()
+    examples, eval, questions, paragraphs, q_to_ps = process_squad_file(question_answer_content, word_counter,
+                                                                        char_counter)
+    tokenized_paragraphs = tokenize_contexts(paragraphs, max_tokens)
+    tokenized_questions = tokenize_contexts(questions, max_tokens)
+    tokenized_questions, tokenized_paragraphs = fixing_the_token_problem(tokenized_questions, tokenized_paragraphs)
+
+    paragraphs_nontokenized = [" ".join(context) for context in tokenized_paragraphs]
+    questions_nontokenized = [" ".join(context) for context in tokenized_questions]
+
+    squad_formatted_content = dict()
+    squad_formatted_content['version'] = 'short_squad_format'
+    data = []
+
+    last_paragraph_indx = None
+    questions = []
+    for q_indx, question in enumerate(tqdm(questions_nontokenized[0:q_len])):
+        if len(data) > negative_sampling_count:
+            break
+        if last_paragraph_indx is None:
+            last_paragraph_indx = q_to_ps[q_indx]
+        current_paragraph_indx = q_to_ps[q_indx]
+        questions.append((q_indx, question))
+        if current_paragraph_indx != last_paragraph_indx:
+            data_ELEMENT = dict()
+            data_ELEMENT['title'] = 'dummyTitle'
+            paragraphs = []
+            paragraphs_ELEMENT = dict()
+            superdocument = paragraphs_nontokenized[current_paragraph_indx]
+            paragraphs_ELEMENT['context'] = superdocument
+            qas = []
+            for _q_indx, _q in questions:
+                qas_ELEMENT = dict()
+                ANSWERS_ELEMENT = dict()
+                qas_ELEMENT_ANSWERS = []
+                qas_ELEMENT['id'] = _q_indx
+                qas_ELEMENT['question'] = _q
+                ANSWERS_ELEMENT['answer_start'] = -1
+                ANSWERS_ELEMENT['text'] = 'dummyAnswer'
+                qas_ELEMENT_ANSWERS.append(ANSWERS_ELEMENT)
+                qas_ELEMENT['answers'] = qas_ELEMENT_ANSWERS
+                qas.append(qas_ELEMENT)
+            paragraphs.append(paragraphs_ELEMENT)
+
+            data_ELEMENT['paragraphs'] = paragraphs
+            data.append(data_ELEMENT)
+        else:
+            questions.append(q_indx)
+    squad_formatted_content['data'] = data
+    return squad_formatted_content
