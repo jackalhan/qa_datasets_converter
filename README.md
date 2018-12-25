@@ -16,6 +16,7 @@ Dataset Converter for natural language processing tasks such QA(question-answeri
 * [NarrativeQA paper](https://arxiv.org/abs/1712.07040) | [NarrativeQA data](https://github.com/deepmind/narrativeqa)
 * [Ubuntu Dialogue Corpus v2.0 paper](https://arxiv.org/abs/1506.08909) | [Ubuntu Dialogue Corpus v2.0 data](https://github.com/rkadlec/ubuntu-ranking-dataset-creator)
 * [NewsQA paper](https://arxiv.org/abs/1611.09830) | [NewsQA data](https://datasets.maluuba.com/NewsQA)
+* [Quasar data](http://curtis.ml.cmu.edu/datasets/quasar/)
 * **MatchZoo** Each line is the raw query and raw document text of a document. The format is "label \t query \t document_txt".  
 #### Supported Formats :
 Source | Destination | Status
@@ -28,11 +29,14 @@ InsuranceQA v2| SQuAD| **completed**
 TriviaQA| SQuAD| **completed**
 NarrativeQA| SQuAD| **completed**
 MS MARCO| SQuAD| **completed**
+MS MARCO v2| SQuAD| **completed**
 WikiMovies| SQuAD| *on hold*
 Simple Questions| SQuAD| *on hold*
 Ubuntu Corpus v2| SQuAD| **completed**
 NewsQA| SQuAD| **completed**
 SQuAD| MatchZoo| **completed**
+Quasar-T| SQuAD| **completed**
+Quasar-S| SQuAD| **completed**
 
 #### Example Call :
 

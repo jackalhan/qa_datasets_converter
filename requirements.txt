@@ -1,3 +1,6 @@
 pandas==0.23.4
 tqdm
 spacy==2.0.8
+scikit_learn==0.19.1
+scipy
+json-lines

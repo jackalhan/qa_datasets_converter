@@ -172,12 +172,13 @@ def convert_to_short_squad(question_answer_content, q_len, negative_sampling_cou
 
     last_paragraph_indx = None
     questions = []
+
     for q_indx, question in enumerate(tqdm(questions_nontokenized[0:q_len])):
         if len(data) > negative_sampling_count:
             break
         if last_paragraph_indx is None:
             last_paragraph_indx = q_to_ps[q_indx]
-        qs = [i for i in q_to_ps if i == 0]
+        #qs = [i for i in q_to_ps if i == 0]
         current_paragraph_indx = q_to_ps[q_indx]
 
         if current_paragraph_indx != last_paragraph_indx:
@@ -207,7 +208,6 @@ def convert_to_short_squad(question_answer_content, q_len, negative_sampling_cou
             data.append(data_ELEMENT)
             questions = []
             last_paragraph_indx = current_paragraph_indx
-
         questions.append((q_indx, question))
     squad_formatted_content['data'] = data
     return squad_formatted_content

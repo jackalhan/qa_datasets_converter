@@ -4,7 +4,7 @@ import util as UTIL
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews, squad
+from ds_formatter import qangaroo, mctest, insuranceqa, triviaqa, wikiqa, narrativeqa, msmarco, ubuntudialogue, cnnnews, squad, quasar
 
 
 def get_parser():
@@ -189,18 +189,58 @@ def main(args):
             formatted_content = narrativeqa.convert_to_squad(story_summary_content, question_content, set_type)
             UTIL.dump_json_file(args.destination_file_path, formatted_content, logging)
         elif args.from_format.lower() == 'msmarco' and args.to_format.lower() == 'squad':
-
             """            
             --log_path="~/log.log" 
-            --data_path="~/data/msmarco" 
-            --from_files="source:dev_2.1.json" 
+            --data_path="~/data/msmarco"
             --from_format="msmarco" 
             --to_format="squad"
             --to_file_name="dev_2.1.json" #it is gonna be renamed as "[from_to]_filename.what" 
             """
-            in_content = UTIL.load_json_file(source_file, logging)
-            formatted_content = msmarco.convert_to_squad(in_content)
+            input_dict = {}
+            try:
+                version = float(source_files['v'])
+            except:
+                version = 2.0
+
+            input_dict['v'] = version
+            if version <= 2.0:
+                """
+                for version <= 2.0
+                --from_files="source:dev_2.1.json, v:2.0"
+                """
+                in_content = UTIL.load_json_file(source_file, logging)
+                input_dict['story_question_content'] = in_content
+                formatted_content = msmarco.convert_to_squad(in_content)
+            else:
+                """
+                for version > 2.0
+                --from_files="source:queries.train.csv,document:collection.tsv,mapping:qrels.train.csv,v:2.1,limit:-1"
+                """
+                queries = UTIL.load_csv_file(source_file, "\t", None, logging, ['id', 'content'])
+                input_dict['queries'] = queries
+                mappings = UTIL.load_csv_file(source_files['mapping'], "\t", None, logging, ['q_id', 'tmp1', 'p_id', 'tmp2'], [0,1,2,3])
+                input_dict['mappings'] = mappings
+                documents = UTIL.load_csv_file(source_files['document'], "\t", None, logging, ['id', 'content'])
+                input_dict['documents'] = documents
+                input_dict['limit'] = int(source_files['limit'])
+                formatted_content = msmarco.convert_to_squad(input_dict)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
+        elif args.from_format.lower() == 'quasar' and args.to_format.lower() == 'squad':
+            """            
+            --log_path="~/log.log" 
+            --data_path="~/data/quasar-t"
+            --from_format="quasar-t" 
+            --to_format="squad"
+            --from_files="source:train_questions.json,document:train_contexts.json,type:t,is_null_tags_filter, limit:-1"
+            --to_file_name="train.json"
+            """
+            if source_files['type'].lower() =='t':
+                # quasar-t
+                queries = UTIL.load_json_line_file(source_file, logging)
+                documents = UTIL.load_json_line_file(source_files['document'], logging)
+                formatted_content = quasar.convert_to_squad(queries, documents, source_files['is_null_tags_filter'], int(source_files['limit']))
+            UTIL.dump_json_file(destination_file, formatted_content, logging)
+
         elif args.from_format.lower() == 'ubuntu' and args.to_format.lower() == 'squad':
             """            
             --log_path="~/log.log" 

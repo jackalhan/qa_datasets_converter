@@ -2,10 +2,20 @@ import json
 import pandas as pd
 import os
 import spacy
+import json_lines
 nlp = spacy.blank("en")
 def word_tokenize(sent):
     doc = nlp(sent)
     return [token.text for token in doc]
+
+# The "*.json.gz" files can be read in python as follows:
+#
+# import gzip
+# def read_data(path):
+#     with gzip.open(path) as f:
+#         for line in f:
+#             yield eval(line)
+
 
 def load_json_file(file_path, logging, encoding='utf-8'):
     content = None
@@ -20,6 +30,22 @@ def load_json_file(file_path, logging, encoding='utf-8'):
             logging.error('(function {}) has an error: {}'.format(load_json_file.__name__, e))
         raise
     return content
+
+def load_json_line_file(file_path, logging, encoding='utf-8'):
+    content = []
+    try:
+        with open(file_path, 'r', encoding=encoding) as f:  # opening file in binary(rb) mode
+            for item in json_lines.reader(f):
+                content.append(item)
+
+        if logging is not None:
+            logging.info('(function {}) is run successfuly and load the file: {}'.format(load_json_line_file.__name__, file_path))
+    except Exception as e:
+        if logging is not None:
+            logging.error('(function {}) has an error: {}'.format(load_json_line_file.__name__, e))
+        raise
+    return content
+
 def create_dir(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
@@ -65,11 +91,11 @@ def get_file_contents_as_list(file_path, encoding='utf-8', ignore_blanks=True):
     lines = [line for line in lines if line != ''] if ignore_blanks else lines
     return lines
 
-def load_csv_file(file_path, sep, header, logging):
+def load_csv_file(file_path, sep, header, logging, names=None, usecols=None):
     content = None
     try:
         with open(file_path, 'r') as f_in:
-            content = pd.read_csv(file_path,sep=sep, header=header)
+            content = pd.read_csv(file_path,sep=sep, header=header, names=names, usecols=None)
         if logging is not None:
             logging.info(
                 '(function {}) is run successfuly and load the file: {}'.format(load_csv_file.__name__, file_path))
