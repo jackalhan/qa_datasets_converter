@@ -1,6 +1,8 @@
 from tqdm import tqdm
 import util as UTIL
+import pandas as pd
 from collections import Counter
+import matplotlib.pyplot as plt
 #from random import shuffle,random
 import os
 import random
@@ -154,6 +156,33 @@ def convert_to_lucene(question_answer_content, doc_type_verbose, source_path):
             #as_json['doc_id'] = indx
             UTIL.dump_json_file(os.path.join(dst_dir, '{}.json'.format(indx)), as_json, None)
     print('Completed.')
+
+def print_statistics(question_answer_content, is_histogram, histogram_bin,  document_type):
+    word_counter, char_counter = Counter(), Counter()
+    examples, eval, questions, paragraphs, q_to_ps = process_squad_file(question_answer_content, word_counter,
+                                                                        char_counter)
+    tokenized_paragraphs = tokenize_contexts(paragraphs, -1)
+    tokenized_questions = tokenize_contexts(questions, -1)
+    tokenized_questions, tokenized_paragraphs = fixing_the_token_problem(tokenized_questions, tokenized_paragraphs)
+
+    paragraphs_nontokenized = [" ".join(context) for context in tokenized_paragraphs]
+    questions_nontokenized = [" ".join(context) for context in tokenized_questions]
+
+    data = []
+    corpus = []
+    if document_type in [1, 3]:
+        corpus = corpus + tokenized_questions
+    if document_type in [2, 3]:
+        corpus = corpus + tokenized_paragraphs
+    for doc in corpus:
+        data.append(len(doc))
+
+    if is_histogram.lower() in ['true', 'True', 'TRUE']:
+        data_df = pd.DataFrame(data, columns=['doc_len'])
+        data_df.hist(bins=histogram_bin)
+        plt.show()
+
+
 
 def convert_to_short_squad(question_answer_content, q_len, negative_sampling_count, max_tokens=-1):
     word_counter, char_counter = Counter(), Counter()

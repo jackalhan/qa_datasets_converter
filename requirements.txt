@@ -4,3 +4,4 @@ spacy==2.0.8
 scikit_learn==0.19.1
 scipy
 json-lines
+matplotlib

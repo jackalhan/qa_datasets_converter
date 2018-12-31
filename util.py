@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import spacy
 import json_lines
+import matplotlib.pyplot as plt
 nlp = spacy.blank("en")
 def word_tokenize(sent):
     doc = nlp(sent)

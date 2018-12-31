@@ -153,6 +153,21 @@ def main(args):
             content = UTIL.load_json_file(source_file, logging)
             formatted_content = squad.convert_to_short_squad(content, q_len, negative_samp_count)
             UTIL.dump_json_file(destination_file, formatted_content, logging)
+        elif args.from_format.lower() == 'squad' and args.to_format.lower() == 'squad':
+            """       
+               In order to make some analyzes.      
+              --log_path="~/log.log" 
+              --data_path="~/data/squad" 
+              --from_files="source:dev-v1.1.json,is_histogram:True,document_type:1" #1 for question, #2 for paragraphs, #3 for both.
+              --from_format="squad" 
+              --to_format="squad" 
+              --to_file_name="dev.json"
+            """
+            is_historgram = source_files['is_histogram']
+            document_type = int(source_files['document_type'])
+            his_bin = int(source_files['histogram_bin'])
+            content = UTIL.load_json_file(source_file, logging)
+            squad.print_statistics(content, is_historgram, his_bin, document_type)
 
         elif args.from_format.lower() == 'narrativeqa' and args.to_format.lower() == 'squad':
             """            

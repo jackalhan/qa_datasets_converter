@@ -8,8 +8,8 @@ def convert_to_squad(queries, documents, is_null_tags_filter, limit):
     squad_formatted_content['version'] = 'quasar-t_squad_format'
     data=[]
     pairs = create_pairs(zip(queries, documents), is_null_tags_filter)
-    if limit != -1:
-        pairs = shuffle(pairs)
+    # if limit != -1:
+    #     pairs = shuffle(pairs)
 
     pairs = pairs.groupby(['p_id', 'p_content'])
     iterator =  tqdm(enumerate(pairs))

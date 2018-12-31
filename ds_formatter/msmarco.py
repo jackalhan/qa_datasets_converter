@@ -76,8 +76,8 @@ def convert_v21(input_dict):
     squad_formatted_content['version'] = 'msmarco_v21_squad_format'
     data=[]
     all_data = assign_mapped_document(input_dict['queries'], input_dict['mappings'], input_dict['documents'])
-    if input_dict['limit'] != -1:
-        all_data = shuffle(all_data)
+    # if input_dict['limit'] != -1:
+    #     all_data = shuffle(all_data)
 
     all_data = all_data.groupby(['p_id', 'p_content'])
     iterator = tqdm(enumerate(all_data))
